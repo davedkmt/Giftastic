@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Favorite Movies</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+
+  <link rel="stylesheet" type="text/css" href="./assets/css/reset.css">
+  <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+</head>
+
+<body>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="container">
+
+        <!-- Buttons will get dumped here -->
+
+        <div id="movies-view"></div>
+      </div>
+    </div>
+  </div>
+  <hr>
+
+  <div class="row">
+    <div class="col-md-12">
+
+      <h1>gifTastic</h1><br>
+      <h3>Movies Must Watch!</h3>
+      <h3></h3>
+      <form id="movie-form">
+        <input type="text" id="movie-input" placeholder="Add a movie"><br>
+
+        <!-- Button triggers new movie to be added -->
+        <button id="add-movie" type="button" class="btn btn-primary" place holder="Add a movie">Submit</button>
+      </form>
+    </div>
+</div>
+<br><br><br><br>
+<div class="row">
+    <div class="col-md-12">
+      <div id="gifs-appear-here">
+      </div>
+
+    </div>
+
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    // Initial array of movies
+    var topics = ["The Lion King", "The Parent Trap", "Bad Boys", "Ferris Bueller's Day Off", "Love and BasketBall", "Sleepless in Seattle", "Scarface", "The GodFather", "Avatar", "Good Will Hunting", "The Shawshank Redemption", "Dark Knight",
+      "The Bourne Series"
+    ];
+
+
+    function renderButtons() {
+
+      $("#movies-view").empty();
+
+
+      for (var i = 0; i < topics.length; i++) {
+
+
+        var a = $("<button type=button class=btn btn-primary>");
+
+        a.addClass("movie");
+
+        a.attr("data-name", topics[i]);
+
+        a.text(topics[i]);
+
+        $("#movies-view").append(a);
+      }
+    }
+
+
+    $("#add-movie").on("click", function(event) {
+
+      event.preventDefault();
+
+
+      var movie = $("#movie-input").val().trim();
+
+      topics.push(movie);
+
+      renderButtons();
+    });
+
+
+    // Starting new function for the ajax call
+    function movieOne() {
+      var movies = $(this).attr("data-name");
+      console.log(movies);
+      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + movies + "&limit=10&api_key=ojOde3HCV5zgk4JKv8K1n6i1gwGwr7XY";
+
+      // ajax call
+      $.ajax({
+          url: queryURL,
+          method: "GET"
+        })
+
+        .done(function(response) {
+          console.log(response.data);
+
+          var results = response.data;
+          // for loop goes through each gif and adds these variables
+          for (var i = 0; i < results.length; i++) {
+
+            // dynamically creating divs and image to
+            // Put data as a data-still when it generates
+            var align=$("<div class='show col-md-2 align'>");
+            var gifDiv = $('<div class=gifs>');
+            var gifImage = $('<img class=img-thumbnail>');
+            gifImage.attr('title', "Rating: " + results[i].rating);
+            gifImage.attr('src', results[i].images.fixed_height_still.url);
+            gifImage.attr('data-still', results[i].images.fixed_height_still.url);
+            gifImage.attr('data-state', 'still');
+            gifImage.addClass('gif');
+            gifImage.attr('data-animate', results[i].images.fixed_height.url);
+
+            var rating = results[i].rating;
+            var p = $('<p>').text('Rating: ' + rating);
+            align.append(p);
+            align.append(gifImage);
+
+            gifDiv.append(align);
+
+            $("#gifs-appear-here").prepend(gifDiv);
+          }
+
+        });
+    }
+
+    // Animating gifs
+    $(document).on('click', '.gif', function() {
+      var state = $(this).attr('data-state');
+      if (state == 'still') {
+        $(this).attr('src', $(this).data('animate'));
+        $(this).attr('data-state', 'animate');
+      } else {
+        $(this).attr('src', $(this).data('still'));
+        $(this).attr('data-state', 'still');
+      }
+    });
+
+    // Displaying gifs
+    $(document).on("click", ".movie", movieOne);
+
+
+
+    renderButtons();
+  </script>
+
+</body>
+
+</html>

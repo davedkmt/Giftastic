@@ -1,0 +1,29 @@
+.gif {
+  width:300px;
+  height: 250px;
+
+}
+.align {
+  margin-left:140px;
+}
+h1, h3, p {
+  color:white;
+}
+
+body {
+  background-color: silver;
+  background-image:url("https://fortunedotcom.files.wordpress.com/2016/02/giphy-3.gif");
+  background-repeat:no-repeat;
+  background-size:cover;
+}
+button,
+div,
+form,
+input {
+  margin: 10px;
+}
+
+#movie-form {
+position:absolute;
+  left:0;
+}

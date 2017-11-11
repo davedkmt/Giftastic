@@ -5,5 +5,5 @@ When the user clicks one of the still GIPHY images, the gif animates. If the use
 
 Under every gif, rating is desplayed (PG, G, so on).
 
-This data is provided by the GIPHY API.
+Link to the app https://davedkmt.github.io/Giftastic/
 
